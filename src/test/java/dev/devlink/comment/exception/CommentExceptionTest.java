@@ -10,7 +10,7 @@ class CommentExceptionTest {
 
     @Test
     @DisplayName("CommentError를 사용하여 CommentException을 생성한다")
-    void createCommentExceptionWithCommentError() {
+    void createCommentExceptionWithCommentError_Success() {
         // given
         CommentError error = CommentError.NOT_FOUND;
 
@@ -24,7 +24,7 @@ class CommentExceptionTest {
 
     @Test
     @DisplayName("각각의 CommentError에 대해 올바른 예외가 생성된다")
-    void createExceptionForEachCommentError() {
+    void createExceptionForEachCommentError_Success() {
         // NOT_FOUND
         CommentException notFoundException = new CommentException(CommentError.NOT_FOUND);
         assertThat(notFoundException.getMessage()).isEqualTo("존재하지 않는 댓글입니다.");
@@ -58,7 +58,7 @@ class CommentExceptionTest {
 
     @Test
     @DisplayName("CommentError enum의 모든 값이 올바르게 설정되어 있다")
-    void commentErrorValues() {
+    void commentErrorValues_AreCorrect() {
         // NOT_FOUND
         assertThat(CommentError.NOT_FOUND.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(CommentError.NOT_FOUND.getCode()).isEqualTo("40420");
@@ -87,7 +87,7 @@ class CommentExceptionTest {
 
     @Test
     @DisplayName("CommentException이 RuntimeException을 상속한다")
-    void commentExceptionInheritance() {
+    void commentExceptionInheritance_ExtendsRuntimeException() {
         // given
         CommentException exception = new CommentException(CommentError.NOT_FOUND);
 

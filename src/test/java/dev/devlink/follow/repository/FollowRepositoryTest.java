@@ -151,4 +151,102 @@ class FollowRepositoryTest {
         assertThat(result).isEmpty();
         verify(followRepository).findByFollowerAndFollowee(follower, followee);
     }
+
+    @Test
+    @DisplayName("팔로우 관계가 존재하지 않을 때 false를 반환한다")
+    void existsByFollowerAndFollowee_WhenNotExists_ReturnFalse() {
+        // given
+        given(followRepository.existsByFollowerAndFollowee(follower, followee)).willReturn(false);
+
+        // when
+        boolean result = followRepository.existsByFollowerAndFollowee(follower, followee);
+
+        // then
+        assertThat(result).isFalse();
+        verify(followRepository).existsByFollowerAndFollowee(follower, followee);
+    }
+
+    @Test
+    @DisplayName("팔로워가 없는 회원의 팔로잉 목록은 빈 리스트이다")
+    void findAllByFollower_WhenNoFollowing_ReturnEmptyList() {
+        // given
+        given(followRepository.findAllByFollower(follower)).willReturn(List.of());
+
+        // when
+        List<Follow> result = followRepository.findAllByFollower(follower);
+
+        // then
+        assertThat(result).isEmpty();
+        verify(followRepository).findAllByFollower(follower);
+    }
+
+    @Test
+    @DisplayName("팔로위가 없는 회원의 팔로워 목록은 빈 리스트이다")
+    void findAllByFollowee_WhenNoFollowers_ReturnEmptyList() {
+        // given
+        given(followRepository.findAllByFollowee(followee)).willReturn(List.of());
+
+        // when
+        List<Follow> result = followRepository.findAllByFollowee(followee);
+
+        // then
+        assertThat(result).isEmpty();
+        verify(followRepository).findAllByFollowee(followee);
+    }
+
+    @Test
+    @DisplayName("팔로워가 없는 회원의 팔로워 수는 0이다")
+    void countByFollowee_WhenNoFollowers_ReturnZero() {
+        // given
+        given(followRepository.countByFollowee(followee)).willReturn(0L);
+
+        // when
+        long result = followRepository.countByFollowee(followee);
+
+        // then
+        assertThat(result).isEqualTo(0L);
+        verify(followRepository).countByFollowee(followee);
+    }
+
+    @Test
+    @DisplayName("팔로잉이 없는 회원의 팔로잉 수는 0이다")
+    void countByFollower_WhenNoFollowing_ReturnZero() {
+        // given
+        given(followRepository.countByFollower(follower)).willReturn(0L);
+
+        // when
+        long result = followRepository.countByFollower(follower);
+
+        // then
+        assertThat(result).isEqualTo(0L);
+        verify(followRepository).countByFollower(follower);
+    }
+
+    @Test
+    @DisplayName("팔로우 관계를 삭제할 수 있다")
+    void deleteByFollowerAndFollowee_Success() {
+        // given
+        given(followRepository.deleteByFollowerAndFollowee(follower, followee)).willReturn(1L);
+
+        // when
+        long result = followRepository.deleteByFollowerAndFollowee(follower, followee);
+
+        // then
+        assertThat(result).isEqualTo(1L);
+        verify(followRepository).deleteByFollowerAndFollowee(follower, followee);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 팔로우 관계 삭제시 0을 반환한다")
+    void deleteByFollowerAndFollowee_WhenNotExists_ReturnZero() {
+        // given
+        given(followRepository.deleteByFollowerAndFollowee(follower, followee)).willReturn(0L);
+
+        // when
+        long result = followRepository.deleteByFollowerAndFollowee(follower, followee);
+
+        // then
+        assertThat(result).isEqualTo(0L);
+        verify(followRepository).deleteByFollowerAndFollowee(follower, followee);
+    }
 }

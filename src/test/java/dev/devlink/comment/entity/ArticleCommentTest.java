@@ -30,7 +30,7 @@ class ArticleCommentTest {
 
     @Test
     @DisplayName("아티클 댓글을 정상적으로 생성한다")
-    void createArticleComment() {
+    void createArticleComment_Success() {
         // given
         String content = "테스트 댓글입니다.";
         Long parentId = null;
@@ -47,7 +47,7 @@ class ArticleCommentTest {
 
     @Test
     @DisplayName("대댓글을 정상적으로 생성한다")
-    void createReplyComment() {
+    void createReplyComment_Success() {
         // given
         String content = "대댓글입니다.";
         Long parentId = 1L;
@@ -62,7 +62,7 @@ class ArticleCommentTest {
 
     @Test
     @DisplayName("작성자 닉네임을 정상적으로 반환한다")
-    void getWriterNickname() {
+    void getWriterNickname_Success() {
         // given
         ArticleComment comment = ArticleComment.create(article, member, null, "테스트 댓글");
 
@@ -75,7 +75,7 @@ class ArticleCommentTest {
 
     @Test
     @DisplayName("작성자를 정상적으로 반환한다")
-    void getWriter() {
+    void getWriter_Success() {
         // given
         ArticleComment comment = ArticleComment.create(article, member, null, "테스트 댓글");
 
@@ -112,7 +112,7 @@ class ArticleCommentTest {
 
     @Test
     @DisplayName("Builder 패턴으로 ArticleComment를 생성한다")
-    void builderPattern() {
+    void createByBuilderPattern_Success() {
         // given
         String content = "빌더로 생성한 댓글";
         Long parentId = 1L;
@@ -134,7 +134,7 @@ class ArticleCommentTest {
 
     @Test
     @DisplayName("create 정적 메서드로 ArticleComment를 생성한다")
-    void createStaticMethod() {
+    void createByStaticMethod_Success() {
         // given
         String content = "정적 메서드로 생성한 댓글";
         Long parentId = 2L;

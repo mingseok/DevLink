@@ -89,7 +89,7 @@ class FeedRepositoryTest {
 
     @Test
     @DisplayName("피드를 삭제할 수 있다")
-    void delete() {
+    void delete_Success() {
         // given
         Feed feedToDelete = createFeed(1L, currentMember, "삭제할 피드", null);
         doNothing().when(feedRepository).delete(feedToDelete);
@@ -102,6 +102,117 @@ class FeedRepositoryTest {
         Feed result = feedRepository.findById(1L).orElse(null);
         assertThat(result).isNull();
         verify(feedRepository).delete(feedToDelete);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 피드 ID로 조회 시 빈 Optional 반환")
+    void findById_NotFound_ReturnsEmpty() {
+        // given
+        when(feedRepository.findById(999L)).thenReturn(Optional.empty());
+
+        // when
+        Optional<Feed> result = feedRepository.findById(999L);
+
+        // then
+        assertThat(result).isEmpty();
+        verify(feedRepository).findById(999L);
+    }
+
+    @Test
+    @DisplayName("특정 회원의 모든 피드를 조회할 수 있다")
+    void findByMember_Success() {
+        // given
+        List<Feed> memberFeeds = Arrays.asList(
+                createFeed(1L, currentMember, "첫 번째 피드", null),
+                createFeed(2L, currentMember, "두 번째 피드", "image.jpg")
+        );
+        when(feedRepository.findByMember(currentMember)).thenReturn(memberFeeds);
+
+        // when
+        List<Feed> result = feedRepository.findByMember(currentMember);
+
+        // then
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).getContent()).isEqualTo("첫 번째 피드");
+        assertThat(result.get(1).getContent()).isEqualTo("두 번째 피드");
+        verify(feedRepository).findByMember(currentMember);
+    }
+
+    @Test
+    @DisplayName("피드가 없는 회원 조회 시 빈 리스트 반환")
+    void findByMember_NoFeeds_ReturnsEmptyList() {
+        // given
+        when(feedRepository.findByMember(followee)).thenReturn(Arrays.asList());
+
+        // when
+        List<Feed> result = feedRepository.findByMember(followee);
+
+        // then
+        assertThat(result).isEmpty();
+        verify(feedRepository).findByMember(followee);
+    }
+
+    @Test
+    @DisplayName("모든 피드를 시간 역순으로 조회할 수 있다")
+    void findAllOrderByCreatedAtDesc_Success() {
+        // given
+        List<Feed> allFeeds = Arrays.asList(followeeFeed, ownFeed); // 시간 역순
+        when(feedRepository.findAllByOrderByCreatedAtDesc()).thenReturn(allFeeds);
+
+        // when
+        List<Feed> result = feedRepository.findAllByOrderByCreatedAtDesc();
+
+        // then
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).getContent()).isEqualTo("팔로우한 사람 피드");
+        assertThat(result.get(1).getContent()).isEqualTo("내 피드");
+        verify(feedRepository).findAllByOrderByCreatedAtDesc();
+    }
+
+    @Test
+    @DisplayName("피드 개수를 카운트할 수 있다")
+    void count_Success() {
+        // given
+        when(feedRepository.count()).thenReturn(2L);
+
+        // when
+        long result = feedRepository.count();
+
+        // then
+        assertThat(result).isEqualTo(2L);
+        verify(feedRepository).count();
+    }
+
+    @Test
+    @DisplayName("특정 회원의 피드 개수를 카운트할 수 있다")
+    void countByMember_Success() {
+        // given
+        when(feedRepository.countByMember(currentMember)).thenReturn(5L);
+
+        // when
+        long result = feedRepository.countByMember(currentMember);
+
+        // then
+        assertThat(result).isEqualTo(5L);
+        verify(feedRepository).countByMember(currentMember);
+    }
+
+    @Test
+    @DisplayName("피드 존재 여부를 확인할 수 있다")
+    void existsById_Success() {
+        // given
+        when(feedRepository.existsById(1L)).thenReturn(true);
+        when(feedRepository.existsById(999L)).thenReturn(false);
+
+        // when
+        boolean exists = feedRepository.existsById(1L);
+        boolean notExists = feedRepository.existsById(999L);
+
+        // then
+        assertThat(exists).isTrue();
+        assertThat(notExists).isFalse();
+        verify(feedRepository).existsById(1L);
+        verify(feedRepository).existsById(999L);
     }
 
     private Member createMember(String name, String email, String nickname) {

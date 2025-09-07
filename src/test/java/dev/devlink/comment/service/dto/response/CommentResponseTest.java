@@ -1,6 +1,8 @@
 package dev.devlink.comment.service.dto.response;
 
+import dev.devlink.comment.entity.ArticleComment;
 import dev.devlink.comment.entity.FeedComment;
+import dev.devlink.article.entity.Article;
 import dev.devlink.feed.entity.Feed;
 import dev.devlink.member.entity.Member;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +18,9 @@ class CommentResponseTest {
 
     private Member member;
     private Feed feed;
+    private Article article;
     private FeedComment feedComment;
+    private ArticleComment articleComment;
 
     @BeforeEach
     void setUp() {
@@ -26,11 +30,18 @@ class CommentResponseTest {
         feed = Feed.create(member, "Test feed content", null);
         ReflectionTestUtils.setField(feed, "id", 1L);
 
-        feedComment = FeedComment.create(feed, member, null, "테스트 댓글입니다.");
+        article = Article.create(member, "Test Article", "Test article content");
+        ReflectionTestUtils.setField(article, "id", 1L);
+
+        feedComment = FeedComment.create(feed, member, null, "테스트 피드 댓글입니다.");
         ReflectionTestUtils.setField(feedComment, "id", 1L);
+        
+        articleComment = ArticleComment.create(article, member, null, "테스트 아티클 댓글입니다.");
+        ReflectionTestUtils.setField(articleComment, "id", 2L);
         
         LocalDateTime now = LocalDateTime.now();
         ReflectionTestUtils.setField(feedComment, "createdAt", now);
+        ReflectionTestUtils.setField(articleComment, "createdAt", now);
     }
 
     @Test
@@ -51,7 +62,7 @@ class CommentResponseTest {
 
     @Test
     @DisplayName("대댓글을 포함한 FeedComment로부터 CommentResponse를 정상적으로 생성한다")
-    void fromFeedCommentWithParent() {
+    void fromFeedCommentWithParent_Success() {
         // given
         FeedComment replyComment = FeedComment.create(feed, member, 1L, "대댓글입니다.");
         ReflectionTestUtils.setField(replyComment, "id", 2L);
@@ -70,7 +81,7 @@ class CommentResponseTest {
 
     @Test
     @DisplayName("자식 댓글을 정상적으로 추가한다")
-    void addChild() {
+    void addChild_Success() {
         // given
         CommentResponse parentResponse = CommentResponse.from(feedComment);
         
@@ -92,7 +103,7 @@ class CommentResponseTest {
 
     @Test
     @DisplayName("여러 자식 댓글을 정상적으로 추가한다")
-    void addMultipleChildren() {
+    void addMultipleChildren_Success() {
         // given
         CommentResponse parentResponse = CommentResponse.from(feedComment);
         
@@ -119,7 +130,7 @@ class CommentResponseTest {
 
     @Test
     @DisplayName("기본 생성자로 생성된 CommentResponse는 빈 children 리스트를 가진다")
-    void defaultConstructor() {
+    void createByDefaultConstructor_HasEmptyChildren() {
         // when
         CommentResponse response = new CommentResponse();
 
@@ -130,7 +141,7 @@ class CommentResponseTest {
 
     @Test
     @DisplayName("CommentResponse의 모든 필드가 정확히 매핑된다")
-    void allFieldsMapping() {
+    void allFieldsMapping_Success() {
         // given
         LocalDateTime fixedTime = LocalDateTime.of(2023, 1, 1, 12, 0, 0);
         ReflectionTestUtils.setField(feedComment, "createdAt", fixedTime);
@@ -140,7 +151,7 @@ class CommentResponseTest {
 
         // then
         assertThat(response.getId()).isEqualTo(1L);
-        assertThat(response.getContent()).isEqualTo("테스트 댓글입니다.");
+        assertThat(response.getContent()).isEqualTo("테스트 피드 댓글입니다.");
         assertThat(response.getWriter()).isEqualTo("testNickname");
         assertThat(response.getWriterId()).isEqualTo(1L);
         assertThat(response.getParentId()).isNull();

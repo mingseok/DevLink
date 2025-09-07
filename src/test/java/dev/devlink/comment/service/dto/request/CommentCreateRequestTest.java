@@ -25,7 +25,7 @@ class CommentCreateRequestTest {
 
     @Test
     @DisplayName("유효한 댓글 생성 요청이 검증을 통과한다")
-    void validRequest() {
+    void validRequest_Success() {
         // given
         CommentCreateRequest request = new CommentCreateRequest();
         ReflectionTestUtils.setField(request, "content", "유효한 댓글 내용입니다.");
@@ -40,7 +40,7 @@ class CommentCreateRequestTest {
 
     @Test
     @DisplayName("유효한 대댓글 생성 요청이 검증을 통과한다")
-    void validReplyRequest() {
+    void validReplyRequest_Success() {
         // given
         CommentCreateRequest request = new CommentCreateRequest();
         ReflectionTestUtils.setField(request, "content", "유효한 대댓글 내용입니다.");
@@ -55,7 +55,7 @@ class CommentCreateRequestTest {
 
     @Test
     @DisplayName("빈 댓글 내용은 검증에 실패한다")
-    void blankContent() {
+    void blankContent_ValidationFails() {
         // given
         CommentCreateRequest request = new CommentCreateRequest();
         ReflectionTestUtils.setField(request, "content", "");
@@ -74,7 +74,7 @@ class CommentCreateRequestTest {
 
     @Test
     @DisplayName("null 댓글 내용은 검증에 실패한다")
-    void nullContent() {
+    void nullContent_ValidationFails() {
         // given
         CommentCreateRequest request = new CommentCreateRequest();
         ReflectionTestUtils.setField(request, "content", null);
@@ -90,7 +90,7 @@ class CommentCreateRequestTest {
 
     @Test
     @DisplayName("공백만으로 이루어진 댓글 내용은 검증에 실패한다")
-    void whitespaceOnlyContent() {
+    void whitespaceOnlyContent_ValidationFails() {
         // given
         CommentCreateRequest request = new CommentCreateRequest();
         ReflectionTestUtils.setField(request, "content", "   ");
@@ -106,7 +106,7 @@ class CommentCreateRequestTest {
 
     @Test
     @DisplayName("10000자를 초과하는 댓글 내용은 검증에 실패한다")
-    void contentTooLong() {
+    void contentTooLong_ValidationFails() {
         // given
         CommentCreateRequest request = new CommentCreateRequest();
         String longContent = "a".repeat(10001);
@@ -123,7 +123,7 @@ class CommentCreateRequestTest {
 
     @Test
     @DisplayName("정확히 10000자인 댓글 내용은 검증을 통과한다")
-    void contentExactly10000Characters() {
+    void contentExactly10000Characters_Success() {
         // given
         CommentCreateRequest request = new CommentCreateRequest();
         String maxContent = "a".repeat(10000);
@@ -138,7 +138,7 @@ class CommentCreateRequestTest {
 
     @Test
     @DisplayName("1자인 댓글 내용은 검증을 통과한다")
-    void contentExactlyOneCharacter() {
+    void contentExactlyOneCharacter_Success() {
         // given
         CommentCreateRequest request = new CommentCreateRequest();
         ReflectionTestUtils.setField(request, "content", "a");
@@ -152,7 +152,7 @@ class CommentCreateRequestTest {
 
     @Test
     @DisplayName("parentId가 null인 경우도 유효하다")
-    void nullParentId() {
+    void nullParentId_IsValid() {
         // given
         CommentCreateRequest request = new CommentCreateRequest();
         ReflectionTestUtils.setField(request, "content", "댓글 내용");

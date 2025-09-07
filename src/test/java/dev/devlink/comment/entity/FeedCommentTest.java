@@ -30,7 +30,7 @@ class FeedCommentTest {
 
     @Test
     @DisplayName("피드 댓글을 정상적으로 생성한다")
-    void createFeedComment() {
+    void createFeedComment_Success() {
         // given
         String content = "테스트 댓글입니다.";
         Long parentId = null;
@@ -47,7 +47,7 @@ class FeedCommentTest {
 
     @Test
     @DisplayName("대댓글을 정상적으로 생성한다")
-    void createReplyComment() {
+    void createReplyComment_Success() {
         // given
         String content = "대댓글입니다.";
         Long parentId = 1L;
@@ -62,7 +62,7 @@ class FeedCommentTest {
 
     @Test
     @DisplayName("피드 ID를 정상적으로 반환한다")
-    void getFeedId() {
+    void getFeedId_Success() {
         // given
         FeedComment comment = FeedComment.create(feed, member, null, "테스트 댓글");
 
@@ -75,7 +75,7 @@ class FeedCommentTest {
 
     @Test
     @DisplayName("작성자 닉네임을 정상적으로 반환한다")
-    void getWriterNickname() {
+    void getWriterNickname_Success() {
         // given
         FeedComment comment = FeedComment.create(feed, member, null, "테스트 댓글");
 
@@ -88,7 +88,7 @@ class FeedCommentTest {
 
     @Test
     @DisplayName("작성자를 정상적으로 반환한다")
-    void getWriter() {
+    void getWriter_Success() {
         // given
         FeedComment comment = FeedComment.create(feed, member, null, "테스트 댓글");
 

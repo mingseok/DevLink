@@ -152,4 +152,118 @@ class ProfileRepositoryTest {
         verify(profileRepository).findByMember(member1);
         verify(profileRepository).findByMember(member2);
     }
+
+    @Test
+    @DisplayName("프로필을 삭제할 수 있다")
+    void delete_Success() {
+        // given & when
+        profileRepository.delete(profile);
+
+        // then
+        verify(profileRepository).delete(profile);
+    }
+
+    @Test
+    @DisplayName("ID로 프로필을 조회할 수 있다")
+    void findById_Success() {
+        // given
+        Long profileId = 1L;
+        given(profileRepository.findById(profileId)).willReturn(Optional.of(profile));
+
+        // when
+        Optional<Profile> result = profileRepository.findById(profileId);
+
+        // then
+        assertThat(result).isPresent();
+        assertThat(result.get().getId()).isEqualTo(profileId);
+        verify(profileRepository).findById(profileId);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 ID로 프로필 조회시 빈 결과 반환")
+    void findById_WhenNotExists_ReturnEmpty() {
+        // given
+        Long nonExistentId = 999L;
+        given(profileRepository.findById(nonExistentId)).willReturn(Optional.empty());
+
+        // when
+        Optional<Profile> result = profileRepository.findById(nonExistentId);
+
+        // then
+        assertThat(result).isEmpty();
+        verify(profileRepository).findById(nonExistentId);
+    }
+
+    @Test
+    @DisplayName("프로필 존재 여부를 확인할 수 있다")
+    void existsById_Success() {
+        // given
+        Long profileId = 1L;
+        given(profileRepository.existsById(profileId)).willReturn(true);
+
+        // when
+        boolean result = profileRepository.existsById(profileId);
+
+        // then
+        assertThat(result).isTrue();
+        verify(profileRepository).existsById(profileId);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 프로필 ID로 존재 여부 확인시 false 반환")
+    void existsById_WhenNotExists_ReturnFalse() {
+        // given
+        Long nonExistentId = 999L;
+        given(profileRepository.existsById(nonExistentId)).willReturn(false);
+
+        // when
+        boolean result = profileRepository.existsById(nonExistentId);
+
+        // then
+        assertThat(result).isFalse();
+        verify(profileRepository).existsById(nonExistentId);
+    }
+
+    @Test
+    @DisplayName("프로필 개수를 조회할 수 있다")
+    void count_Success() {
+        // given
+        given(profileRepository.count()).willReturn(5L);
+
+        // when
+        long result = profileRepository.count();
+
+        // then
+        assertThat(result).isEqualTo(5L);
+        verify(profileRepository).count();
+    }
+
+    @Test
+    @DisplayName("회원으로 프로필 존재 여부를 확인할 수 있다")
+    void existsByMember_Success() {
+        // given
+        given(profileRepository.existsByMember(member)).willReturn(true);
+
+        // when
+        boolean result = profileRepository.existsByMember(member);
+
+        // then
+        assertThat(result).isTrue();
+        verify(profileRepository).existsByMember(member);
+    }
+
+    @Test
+    @DisplayName("프로필이 없는 회원으로 존재 여부 확인시 false 반환")
+    void existsByMember_WhenNotExists_ReturnFalse() {
+        // given
+        Member memberWithoutProfile = Member.create("프로필없음", "noprofile@test.com", "노프로필", "password");
+        given(profileRepository.existsByMember(memberWithoutProfile)).willReturn(false);
+
+        // when
+        boolean result = profileRepository.existsByMember(memberWithoutProfile);
+
+        // then
+        assertThat(result).isFalse();
+        verify(profileRepository).existsByMember(memberWithoutProfile);
+    }
 }
