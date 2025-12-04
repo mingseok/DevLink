@@ -14,7 +14,7 @@
 
 ## 🔍 Tech Stack
 
-`Java 21`, `Spring boot 3.5.3`, `Spring Data JPA`, `MySQL`, `Redis`, `AWS EC2`, `Gradle`, `JUnit`
+`Java 17`, `Spring boot 3.5.3`, `Spring Data JPA`, `MySQL`, `Redis`, `AWS EC2`, `Gradle`, `JUnit`
 
 
 <br/>
